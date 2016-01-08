@@ -1,0 +1,4 @@
+#!/bin/bash
+
+phonegap build
+phonegap run android
