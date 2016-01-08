@@ -17,6 +17,11 @@ var AppFramework = function (callback) {
 
     var __constructor = function () {
         document.title = _conf.appTitle;
+
+        jQuery.getScript(AppFramework.URL_JS + "custom.js")
+                .fail(function (jqxhr, settings, exception) {
+                    // do nothing
+                });
     };
 
 
@@ -59,6 +64,8 @@ var AppFramework = function (callback) {
 
 // Static properties
 AppFramework.URL_ROOT = "../";
+AppFramework.URL_SRC = AppFramework.URL_ROOT + "src/";
+AppFramework.URL_JS = AppFramework.URL_SRC + "js/";
 AppFramework.URL_CONF = AppFramework.URL_ROOT + "conf/";
 // alias for constructor
 AppFramework.init = function (callback) {
