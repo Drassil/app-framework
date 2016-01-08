@@ -10,7 +10,8 @@ var AppFramework = function (callback) {
 
             __constructor();
 
-            callback.call(that);
+            if (typeof callback=="function")
+                callback.call(that);
         });
     });
 
