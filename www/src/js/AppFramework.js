@@ -41,7 +41,7 @@ var AppFramework = function (callback) {
         jQuery('#' + id + ' .modal-message').fadeIn('slow');
     };
 
-    this.ready = function () {
+    this.loadExternal = function () {
         var that = this;
         jQuery.ajax({url: _conf.urlCrossOrigin,
             type: "HEAD",
@@ -65,6 +65,7 @@ var AppFramework = function (callback) {
 // Static properties
 AppFramework.URL_ROOT = "../";
 AppFramework.URL_SRC = AppFramework.URL_ROOT + "src/";
+AppFramework.URL_MODULES = AppFramework.URL_ROOT + "modules/";
 AppFramework.URL_JS = AppFramework.URL_SRC + "js/";
 AppFramework.URL_CONF = AppFramework.URL_ROOT + "conf/";
 // alias for constructor
