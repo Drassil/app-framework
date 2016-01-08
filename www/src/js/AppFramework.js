@@ -1,9 +1,17 @@
-var AppFramework = function () {
-
+var AppFramework = function (callback) {
+    var that = this;
     // [constructor]
-    var _confDef = jQuery.getJSON(AppFramework.URL_CONF + "conf.def.json");
-    var _conf = jQuery.getJSON(AppFramework.URL_CONF + "conf.json");
-    _conf = jQuery.extend(true, _conf, _confDef)
+    var _confDef = {};
+    var _conf = {};
+    jQuery.getJSON(AppFramework.URL_CONF + "conf.def.json", function (resDef) {
+        _confDef = resDef;
+        jQuery.getJSON(AppFramework.URL_CONF + "conf.json", function (res) {
+            _conf = jQuery.extend(true, _confDef, res);
+            callback.call(that);
+        });
+    });
+
+
     // [/constructor]
 
     this.exitApp = function () {
@@ -42,5 +50,9 @@ var AppFramework = function () {
 
 
 // Static properties
-AppFramework.URL_ROOT = "../../";
+AppFramework.URL_ROOT = "../";
 AppFramework.URL_CONF = AppFramework.URL_ROOT + "conf/";
+// alias for constructor
+AppFramework.init = function (callback) {
+    return new AppFramework(callback);
+};
