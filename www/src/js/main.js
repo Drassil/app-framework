@@ -1,14 +1,3 @@
-
-
-
-document.addEventListener("deviceready", function () {
-    AppFramework.init(function () {
-        // starts here
-        this.ready();
-    });
-}, false);
-
-AppFramework.init(function () {
-    // starts here
-    this.ready();
-});
+// at this point the device should yet ready
+// after index.html relocation
+AppFramework.init();
