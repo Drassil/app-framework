@@ -7,9 +7,17 @@ var AppFramework = function (callback) {
         _confDef = resDef;
         jQuery.getJSON(AppFramework.URL_CONF + "conf.json", function (res) {
             _conf = jQuery.extend(true, _confDef, res);
+
+            __constructor();
+
             callback.call(that);
         });
     });
+
+
+    var __constructor = function () {
+        document.title = _conf.appTitle;
+    };
 
 
     // [/constructor]
