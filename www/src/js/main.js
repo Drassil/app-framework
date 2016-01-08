@@ -1,4 +1,14 @@
-var appFramework=new AppFramework();
 
 
-document.addEventListener("deviceready", appFramework.ready(), false);
+
+document.addEventListener("deviceready", function () {
+    AppFramework.init(function () {
+        // starts here
+        this.ready();
+    });
+}, false);
+
+AppFramework.init(function () {
+    // starts here
+    this.ready();
+});

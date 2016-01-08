@@ -5,9 +5,9 @@
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no">
         <link rel="stylesheet" href="css/style.css" type="text/css" media="all">	
         <!-- modules -->
-        <script src="../../modules/jquery/jquery.min.js" type="text/javascript"></script>
-        <script src="../../modules/jquery/jquery.mobile.custom.min.js" type="text/javascript"></script>
-        <script src="../../modules/respondjs/respond.min.js"></script>	
+        <script src="../modules/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="../modules/jquery/jquery.mobile.custom.min.js" type="text/javascript"></script>
+        <script src="../modules/respondjs/respond.min.js"></script>	
         <!-- framework js -->
         <script type="text/javascript" src="js/AppFramework.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
@@ -16,7 +16,6 @@
         <div id="connection" style="display: none;">
             <div class="modal-container">
                 <div class="modal-message">
-                    <span class="icon icon-warning"></span>
                     <p>Sembra che tu sia offline.</p>
                     <p>Controlla la tua connessione.</p>
                     <a href="javascript:;" onclick="jQuery('#connection').hide()" class="bottone">Ricarica</a>
@@ -27,7 +26,6 @@
 
         <div id="wrapper" style="display: block;">
             <div class="container">
-                <img src="../data/img/logo.png"> 
             </div>
         </div> 
 
@@ -35,7 +33,7 @@
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/cordovaApp.js"></script>
         <script>
-            app.initialize();
+                        app.initialize();
         </script>
     </body>
 </html>
