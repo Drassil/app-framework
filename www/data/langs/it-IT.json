@@ -1,0 +1,5 @@
+{
+    "noConnectionMsg": "<p>Sembra che tu sia offline.</p><p>Controlla la tua connessione.</p>",
+    "noConnectionReloadBtn": "Ricarica",
+    "noConnectionExitBtn": "Chiudi"
+}

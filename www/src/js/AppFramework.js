@@ -1,28 +1,43 @@
 var AppFramework = function (callback) {
     var that = this;
-    // [constructor]
+
     var _confDef = {};
     var _conf = {};
+    var _lang = {};
+
+    // [constructor]
+    // [TODO] avoid callback nesting using hwcore framework
     jQuery.getJSON(AppFramework.URL_CONF + "conf.def.json", function (resDef) {
         _confDef = resDef;
         jQuery.getJSON(AppFramework.URL_CONF + "conf.json", function (res) {
             _conf = jQuery.extend(true, _confDef, res);
 
-            __constructor();
+            var l = navigator.languages instanceof Array && navigator.languages.length > 0 ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 
-            if (typeof callback=="function")
-                callback.call(that);
+            that.loadLang(l, function () {
+                __constructor(callback);
+            });
+
         });
     });
 
 
-    var __constructor = function () {
+    var __constructor = function (callback) {
         document.title = _conf.appTitle;
 
-        jQuery.getScript(AppFramework.URL_JS + "custom.js")
-                .fail(function (jqxhr, settings, exception) {
-                    // do nothing
-                });
+        // load lang strings
+        jQuery("#connection .warning").html(_lang.noConnectionMsg);
+        jQuery("#connection .button-reload").html(_lang.noConnectionReloadBtn);
+        jQuery("#connection .button-exit").html(_lang.noConnectionExitBtn);
+
+        if (_conf.customScript) {
+            jQuery.getScript(AppFramework.URL_ROOT + _conf.customScript, function () {
+                if (typeof callback == "function")
+                    callback.call(that);
+            }).fail(function (jqxhr, settings, exception) {
+                console.log(exception);
+            });
+        }
     };
 
 
@@ -34,6 +49,24 @@ var AppFramework = function (callback) {
         } else if (navigator.device) {
             navigator.device.exitApp();
         }
+    };
+
+    this.loadLang = function (lang, cb) {
+        var that = this;
+        if (!lang)
+            lang = "en-GB";
+
+        jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
+            .done(function (res) {
+                _lang = res;
+                cb && cb();
+            })
+            .fail(function () {
+                if (lang == "en-GB")
+                    throw "No language available, check your installation";
+
+                that.loadLang("en-GB", cb);
+            });
     };
 
     this.showMessage = function (id) {
@@ -69,6 +102,7 @@ AppFramework.URL_SRC = AppFramework.URL_ROOT + "src/";
 AppFramework.URL_MODULES = AppFramework.URL_ROOT + "modules/";
 AppFramework.URL_JS = AppFramework.URL_SRC + "js/";
 AppFramework.URL_CONF = AppFramework.URL_ROOT + "conf/";
+AppFramework.URL_DATA = AppFramework.URL_ROOT + "data/";
 // alias for constructor
 AppFramework.init = function (callback) {
     return new AppFramework(callback);

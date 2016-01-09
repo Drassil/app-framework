@@ -1,0 +1,14 @@
+#!/bin/bash
+
+phonegap plugin add cordova-plugin-console
+phonegap plugin add cordova-plugin-inappbrowser
+phonegap plugin add cordova-plugin-vibration
+phonegap plugin add cordova-plugin-device
+phonegap plugin add cordova-plugin-device-motion
+phonegap plugin add cordova-plugin-device-orientation
+phonegap plugin add cordova-plugin-dialogs
+phonegap plugin add cordova-plugin-globalization
+phonegap plugin add cordova-plugin-media
+phonegap plugin add cordova-plugin-network-information
+phonegap plugin add cordova-plugin-splashscreen
+phonegap plugin add cordova-plugin-whitelist

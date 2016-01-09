@@ -1,0 +1,5 @@
+{
+    "noConnectionMsg": "<p>Seems that you're offline</p><p>Check your internet connection.</p>",
+    "noConnectionReloadBtn": "Reload",
+    "noConnectionExitBtn": "Exit"
+}
