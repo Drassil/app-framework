@@ -37,6 +37,10 @@ var AppFramework = function (callback) {
             }).fail(function (jqxhr, settings, exception) {
                 console.log(exception);
             });
+        } else {
+            if (_conf.url) {
+                this.loadExternal();
+            }
         }
     };
 
@@ -57,16 +61,16 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-            .done(function (res) {
-                _lang = res;
-                cb && cb();
-            })
-            .fail(function () {
-                if (lang == "en-GB")
-                    throw "No language available, check your installation";
+                .done(function (res) {
+                    _lang = res;
+                    cb && cb();
+                })
+                .fail(function () {
+                    if (lang == "en-GB")
+                        throw "No language available, check your installation";
 
-                that.loadLang("en-GB", cb);
-            });
+                    that.loadLang("en-GB", cb);
+                });
     };
 
     this.showMessage = function (id) {
@@ -77,12 +81,13 @@ var AppFramework = function (callback) {
 
     this.loadExternal = function () {
         var that = this;
-        jQuery.ajax({url: _conf.urlCrossOrigin,
+        var url = _conf.urlCrossOrigin ? _conf.urlCrossOrigin : _conf.url;
+        jQuery.ajax({url: url,
             type: "HEAD",
-            timeout: 1000,
+            timeout: 3000,
             statusCode: {
                 200: function (response) {
-                    window.location.replace(_conf.url, '_self');
+                    _loadExternal();
                 },
                 400: function (response) {
                     that.showMessage("connection");
@@ -92,6 +97,22 @@ var AppFramework = function (callback) {
                 }
             }
         });
+    };
+
+
+    var _loadExternal = function () {
+        switch (_conf.loadType) {
+            case "iframe":
+                var ifrm = document.createElement("iframe");
+                ifrm.setAttribute("src", _conf.url);
+                ifrm.setAttribute("id", "app-iframe");
+                $(_conf.iframeTarget).html(ifrm);
+                break;
+            case "webview":
+                window.location.replace(_conf.url, '_self');
+                break;
+        }
+
     };
 };
 

@@ -80,7 +80,6 @@ local.properties
 /platforms/
 /plugins/
 /www/usr/
-/www/src/js/custom.js
 /www/modules/*
 !/www/modules/jquery/
 !/www/modules/respondjs/

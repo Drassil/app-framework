@@ -2,5 +2,7 @@
     "appTitle": "App Framework",
     "url": "",
     "urlCrossOrigin": "",
-    "customScript": ""
+    "customScript": "",
+    "loadType": "webview",
+    "iframeTarget": ""
 }
