@@ -7,7 +7,7 @@
     <author email="info@hyperweb2.com" href="http://www.hyperweb2.com">
         HyperWeb2
     </author>
-    <icon src="www/data/img/logo.jpg" />
+    <icon src="logo.jpg" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="portrait" />
     <preference name="target-device" value="universal" />
@@ -18,7 +18,8 @@
     <preference name="ios-statusbarstyle" value="black-opaque" />
     <preference name="detect-data-types" value="true" />
     <preference name="exit-on-suspend" value="false" />
-    <preference name="show-splash-screen-spinner" value="true" />
+    <!--<preference name="show-splash-screen-spinner" value="true" />-->
+    <preference name="SplashScreen" value="none"/>
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="14" />
