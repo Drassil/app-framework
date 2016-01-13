@@ -4,6 +4,7 @@ var AppFramework = function (callback) {
     var _confDef = {};
     var _conf = {};
     var _lang = {};
+    var _msgListener = null;
 
     // [constructor]
     // [TODO] avoid callback nesting using hwcore framework
@@ -61,16 +62,16 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-                .done(function (res) {
-                    _lang = res;
-                    cb && cb();
-                })
-                .fail(function () {
-                    if (lang == "en-GB")
-                        throw "No language available, check your installation";
+            .done(function (res) {
+                _lang = res;
+                cb && cb();
+            })
+            .fail(function () {
+                if (lang == "en-GB")
+                    throw "No language available, check your installation";
 
-                    that.loadLang("en-GB", cb);
-                });
+                that.loadLang("en-GB", cb);
+            });
     };
 
     this.showMessage = function (id) {
@@ -99,20 +100,44 @@ var AppFramework = function (callback) {
         });
     };
 
+    this.setMsgListener = function (listenerFn) {
+        _msgListener = listenerFn;
+    };
+
 
     var _loadExternal = function () {
         switch (_conf.loadType) {
             case "iframe":
-                var ifrm = document.createElement("iframe");
-                ifrm.setAttribute("src", _conf.url);
-                ifrm.setAttribute("id", "app-iframe");
-                $(_conf.iframeTarget).html(ifrm);
+                _loadIFrame();
                 break;
             case "webview":
                 window.location.replace(_conf.url, '_self');
                 break;
         }
+    }
 
+    var _loadIFrame = function () {
+        document.addEventListener('deviceready', function () {
+            var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+            var eventer = window[eventMethod];
+            var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+            // Listen to message from child window
+            eventer(messageEvent, function (e) {
+                var key = e.message ? "message" : "data";
+                var data = e[key];
+                //run function//
+                if (typeof _msgListener == "function")
+                    _msgListener(e, data);
+            }, false);
+        }, false);
+
+
+        var ifrm = document.createElement("iframe");
+        ifrm.setAttribute("src", _conf.url);
+        ifrm.setAttribute("frameBorder", 0);
+        ifrm.setAttribute("id", "app-iframe");
+        $(_conf.iframeTarget).html(ifrm);
     };
 };
 

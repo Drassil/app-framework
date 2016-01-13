@@ -1,3 +1,3 @@
-// at this point the device should yet ready
+// at this point the device should be yet ready
 // after index.html relocation
 appFramework = AppFramework.init();
