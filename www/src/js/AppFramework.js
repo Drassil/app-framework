@@ -61,16 +61,16 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-                .done(function (res) {
-                    _lang = res;
-                    cb && cb();
-                })
-                .fail(function () {
-                    if (lang == "en-GB")
-                        throw "No language available, check your installation";
+            .done(function (res) {
+                _lang = res;
+                cb && cb();
+            })
+            .fail(function () {
+                if (lang == "en-GB")
+                    throw "No language available, check your installation";
 
-                    that.loadLang("en-GB", cb);
-                });
+                that.loadLang("en-GB", cb);
+            });
     };
 
     this.showMessage = function (id) {
@@ -103,14 +103,34 @@ var AppFramework = function (callback) {
     var _loadExternal = function () {
         switch (_conf.loadType) {
             case "iframe":
-                var ifrm = document.createElement("iframe");
-                ifrm.setAttribute("src", _conf.url);
-                ifrm.setAttribute("id", "app-iframe");
-                $(_conf.iframeTarget).html(ifrm);
+                _loadIFrame();
                 break;
             case "webview":
                 window.location.replace(_conf.url, '_self');
                 break;
+        }
+
+        var _loadIFrame = function () {
+            document.addEventListener('deviceready', function () {
+                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                var eventer = window[eventMethod];
+                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+                // Listen to message from child window
+                eventer(messageEvent, function (e) {
+                    var key = e.message ? "message" : "data";
+                    var data = e[key];
+                    //run function//
+                    eval(data);
+                }, false);
+            }, false);
+
+
+            var ifrm = document.createElement("iframe");
+            ifrm.setAttribute("src", _conf.url);
+            ifrm.setAttribute("frameBorder", 0);
+            ifrm.setAttribute("id", "app-iframe");
+            $(_conf.iframeTarget).html(ifrm);
         }
 
     };
