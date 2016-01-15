@@ -137,8 +137,8 @@ var AppFramework = function (callback) {
         if (!force && _conf.skipConnCheck)
             return;
 
-        return !(navigator.connection.type === "none" || navigator.connection.type === null ||
-                navigator.connection.type === "unknown" || !navigator.onLine);
+        var type=navigator.connection.type;
+        return !(type === "none" || type === null || !navigator.onLine);
     };
 
     this.connectionCheckMsg = function (force, error) {
