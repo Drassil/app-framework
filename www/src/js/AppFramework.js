@@ -57,16 +57,16 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-                .done(function (res) {
-                    _lang = res;
-                    cb && cb();
-                })
-                .fail(function () {
-                    if (lang == "en-GB")
-                        throw "No language available, check your installation";
+            .done(function (res) {
+                _lang = res;
+                cb && cb();
+            })
+            .fail(function () {
+                if (lang == "en-GB")
+                    throw "No language available, check your installation";
 
-                    that.loadLang("en-GB", cb);
-                });
+                that.loadLang("en-GB", cb);
+            });
     };
 
     this.showMessage = function (id) {
@@ -93,10 +93,10 @@ var AppFramework = function (callback) {
         var that = this;
         var url = _conf.urlCrossOrigin ? _conf.urlCrossOrigin : _conf.url;
 
-        that.connectionCheckMsg(false, true);
+        that.connectionCheckMsg(false);
 
         document.addEventListener('offline', function () {
-            that.connectionCheckMsg(false, true);
+            that.connectionCheckMsg(false);
         }, false);
 
         if (!_conf.skipAjaxCheck) {
@@ -137,22 +137,19 @@ var AppFramework = function (callback) {
         if (!force && _conf.skipConnCheck)
             return;
 
-        var type=navigator.connection.type;
+        var type = navigator.connection.type;
         return !(type === "none" || type === null || !navigator.onLine);
     };
 
-    this.connectionCheckMsg = function (force, error) {
+    this.connectionCheckMsg = function (force) {
         !this.connectionCheck(force) && this.showMessage("connection");
-
-        //if (error)
-        //    throw new Error("No connection found");
     };
 
 
     var _loadExternal = function () {
 
         setInterval(function () {
-            that.connectionCheckMsg(false, true);
+            that.connectionCheckMsg(false);
         }, 3000);
 
         switch (_conf.loadType) {
@@ -166,6 +163,15 @@ var AppFramework = function (callback) {
     };
 
     var _loadIFrame = function () {
+        var ifrm = document.createElement("iframe");
+        ifrm.setAttribute("name", "app-iframe");
+        ifrm.setAttribute("src", _conf.url);
+        ifrm.setAttribute("frameBorder", 0);
+        ifrm.setAttribute("id", "app-iframe");
+        $(_conf.iframeTarget).html(ifrm);
+
+        var childWindow = (ifrm.contentWindow || ifrm.contentDocument);
+
         document.addEventListener('deviceready', function () {
             var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
             var eventer = window[eventMethod];
@@ -179,17 +185,15 @@ var AppFramework = function (callback) {
                 if (typeof _msgListener == "function")
                     _msgListener(e, data);
                 else {
-                    _conf.evalPostMessage && eval(data) || console.log("Received from postMessage: " + data);
+                    if (_conf.evalPostMessage) {
+                        var result = eval(data);
+                        childWindow.postMessage(result, _conf.url);
+                    } else {
+                        console.log("Received from postMessage: " + data);
+                    }
                 }
             }, false);
         }, false);
-
-
-        var ifrm = document.createElement("iframe");
-        ifrm.setAttribute("src", _conf.url);
-        ifrm.setAttribute("frameBorder", 0);
-        ifrm.setAttribute("id", "app-iframe");
-        $(_conf.iframeTarget).html(ifrm);
     };
 };
 
