@@ -16,7 +16,7 @@ var AppFramework = function (callback) {
             var l = navigator.languages instanceof Array && navigator.languages.length > 0 ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 
             that.loadLang(l, function () {
-                __constructor(callback);
+                __constructor.call(that, callback);
             });
 
         });
@@ -25,11 +25,6 @@ var AppFramework = function (callback) {
 
     var __constructor = function (callback) {
         document.title = _conf.appTitle;
-
-        // load lang strings
-        jQuery("#connection .warning").html(_lang.noConnectionMsg);
-        jQuery("#connection .button-reload").html(_lang.noConnectionReloadBtn);
-        jQuery("#connection .button-exit").html(_lang.noConnectionExitBtn);
 
         if (_conf.customScript) {
             jQuery.getScript(AppFramework.URL_ROOT + _conf.customScript, function () {
@@ -62,42 +57,67 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-            .done(function (res) {
-                _lang = res;
-                cb && cb();
-            })
-            .fail(function () {
-                if (lang == "en-GB")
-                    throw "No language available, check your installation";
+                .done(function (res) {
+                    _lang = res;
+                    cb && cb();
+                })
+                .fail(function () {
+                    if (lang == "en-GB")
+                        throw "No language available, check your installation";
 
-                that.loadLang("en-GB", cb);
-            });
+                    that.loadLang("en-GB", cb);
+                });
     };
 
     this.showMessage = function (id) {
-        jQuery('#' + id + ' .modal-message').hide();
-        jQuery('#' + id).show();
-        jQuery('#' + id + ' .modal-message').fadeIn('slow');
+        if (jQuery("#" + id).is(':visible'))
+            return;
+
+        jQuery.get(AppFramework.URL_SRC + "html/" + id + ".html", function (data) {
+            jQuery("body").append(data);
+
+            // load lang strings
+            if (id == "connection") {
+                jQuery("#connection .warning").html(_lang.noConnectionMsg);
+                jQuery("#connection .button-reload").html(_lang.noConnectionReloadBtn);
+                jQuery("#connection .button-exit").html(_lang.noConnectionExitBtn);
+            }
+
+            jQuery('#' + id + ' .modal-message').hide();
+            jQuery('#' + id).show();
+            jQuery('#' + id + ' .modal-message').fadeIn('slow');
+        });
     };
 
     this.loadExternal = function () {
         var that = this;
         var url = _conf.urlCrossOrigin ? _conf.urlCrossOrigin : _conf.url;
-        jQuery.ajax({url: url,
-            type: "HEAD",
-            timeout: 3000,
-            statusCode: {
-                200: function (response) {
-                    _loadExternal();
-                },
-                400: function (response) {
-                    that.showMessage("connection");
-                },
-                0: function (response) {
-                    that.showMessage("connection");
+
+        that.connectionCheckMsg(false, true);
+
+        document.addEventListener('offline', function () {
+            that.connectionCheckMsg(false, true);
+        }, false);
+
+        if (!_conf.skipAjaxCheck) {
+            jQuery.ajax({url: url,
+                type: "HEAD",
+                timeout: 3000,
+                statusCode: {
+                    200: function (response) {
+                        _loadExternal();
+                    },
+                    400: function (response) {
+                        that.showMessage("connection");
+                    },
+                    0: function (response) {
+                        that.showMessage("connection");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            _loadExternal();
+        }
     };
 
     this.setMsgListener = function (listenerFn) {
@@ -105,7 +125,36 @@ var AppFramework = function (callback) {
     };
 
 
+    this.setConf = function (key, value) {
+        _conf[key] = value;
+    };
+
+    this.getConf = function (key) {
+        return _conf[key];
+    };
+
+    this.connectionCheck = function (force) {
+        if (!force && _conf.skipConnCheck)
+            return;
+
+        return !(navigator.connection.type === "none" || navigator.connection.type === null ||
+                navigator.connection.type === "unknown" || !navigator.onLine);
+    };
+
+    this.connectionCheckMsg = function (force, error) {
+        !this.connectionCheck(force) && this.showMessage("connection");
+
+        //if (error)
+        //    throw new Error("No connection found");
+    };
+
+
     var _loadExternal = function () {
+
+        setInterval(function () {
+            that.connectionCheckMsg(false, true);
+        }, 3000);
+
         switch (_conf.loadType) {
             case "iframe":
                 _loadIFrame();
@@ -114,7 +163,7 @@ var AppFramework = function (callback) {
                 window.location.replace(_conf.url, '_self');
                 break;
         }
-    }
+    };
 
     var _loadIFrame = function () {
         document.addEventListener('deviceready', function () {
@@ -129,6 +178,9 @@ var AppFramework = function (callback) {
                 //run function//
                 if (typeof _msgListener == "function")
                     _msgListener(e, data);
+                else {
+                    _conf.evalPostMessage && eval(data) || console.log("Received from postMessage: " + data);
+                }
             }, false);
         }, false);
 
