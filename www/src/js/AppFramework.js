@@ -16,7 +16,7 @@ var AppFramework = function (callback) {
             var l = navigator.languages instanceof Array && navigator.languages.length > 0 ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 
             that.loadLang(l, function () {
-                __constructor(callback);
+                __constructor.call(that, callback);
             });
 
         });
@@ -62,16 +62,16 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-            .done(function (res) {
-                _lang = res;
-                cb && cb();
-            })
-            .fail(function () {
-                if (lang == "en-GB")
-                    throw "No language available, check your installation";
+                .done(function (res) {
+                    _lang = res;
+                    cb && cb();
+                })
+                .fail(function () {
+                    if (lang == "en-GB")
+                        throw "No language available, check your installation";
 
-                that.loadLang("en-GB", cb);
-            });
+                    that.loadLang("en-GB", cb);
+                });
     };
 
     this.showMessage = function (id) {
@@ -83,25 +83,38 @@ var AppFramework = function (callback) {
     this.loadExternal = function () {
         var that = this;
         var url = _conf.urlCrossOrigin ? _conf.urlCrossOrigin : _conf.url;
-        jQuery.ajax({url: url,
-            type: "HEAD",
-            timeout: 3000,
-            statusCode: {
-                200: function (response) {
-                    _loadExternal();
-                },
-                400: function (response) {
-                    that.showMessage("connection");
-                },
-                0: function (response) {
-                    that.showMessage("connection");
+        if (!_conf.skipAjaxCheck) {
+            jQuery.ajax({url: url,
+                type: "HEAD",
+                timeout: 3000,
+                statusCode: {
+                    200: function (response) {
+                        _loadExternal();
+                    },
+                    400: function (response) {
+                        that.showMessage("connection");
+                    },
+                    0: function (response) {
+                        that.showMessage("connection");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            _loadExternal();
+        }
     };
 
     this.setMsgListener = function (listenerFn) {
         _msgListener = listenerFn;
+    };
+
+
+    this.setConf = function (key, value) {
+        _conf[key] = value;
+    };
+
+    this.getConf = function (key) {
+        return _conf[key];
     };
 
 
@@ -129,6 +142,9 @@ var AppFramework = function (callback) {
                 //run function//
                 if (typeof _msgListener == "function")
                     _msgListener(e, data);
+                else {
+                    _conf.evalPostMessage && eval(data) || console.log("Received from postMessage: "+data);
+                }
             }, false);
         }, false);
 
