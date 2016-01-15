@@ -2,7 +2,9 @@
     "appTitle": "App Framework",
     "url": "",
     "urlCrossOrigin": "",
+    "skipAjaxCheck": false,
     "customScript": "",
     "loadType": "webview",
-    "iframeTarget": ""
+    "iframeTarget": "",
+    "evalPostMessage": false
 }
