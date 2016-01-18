@@ -1,3 +1,5 @@
+"use strict";
+
 var AppFramework = function (callback) {
     var that = this;
 
@@ -57,23 +59,41 @@ var AppFramework = function (callback) {
             lang = "en-GB";
 
         jQuery.getJSON(AppFramework.URL_DATA + "langs/" + lang + ".json")
-            .done(function (res) {
-                _lang = res;
-                cb && cb();
-            })
-            .fail(function () {
-                if (lang == "en-GB")
-                    throw "No language available, check your installation";
+                .done(function (res) {
+                    _lang = res;
+                    cb && cb();
+                })
+                .fail(function () {
+                    if (lang == "en-GB")
+                        throw "No language available, check your installation";
 
-                that.loadLang("en-GB", cb);
-            });
+                    that.loadLang("en-GB", cb);
+                });
     };
 
     this.showMessage = function (id) {
-        if (jQuery("#" + id).is(':visible'))
+        var el = jQuery("#" + id);
+
+        var show = function () {
+            jQuery('#' + id + ' .modal-message').hide();
+            el.show();
+            jQuery('#' + id + ' .modal-message').fadeIn('slow');
+        };
+
+
+        if (el.length) {
+            // if exists but not visible, do not load again
+            if (el.css('display') == 'none') {
+                show();
+            }
+
             return;
+        }
 
         jQuery.get(AppFramework.URL_SRC + "html/" + id + ".html", function (data) {
+            if (el.length) // double check to avoid concurrency issues
+                return;
+
             jQuery("body").append(data);
 
             // load lang strings
@@ -83,10 +103,12 @@ var AppFramework = function (callback) {
                 jQuery("#connection .button-exit").html(_lang.noConnectionExitBtn);
             }
 
-            jQuery('#' + id + ' .modal-message').hide();
-            jQuery('#' + id).show();
-            jQuery('#' + id + ' .modal-message').fadeIn('slow');
+            show();
         });
+    };
+
+    this.clearMessage = function (id) {
+        jQuery('#' + id).fadeOut("slow");
     };
 
     this.loadExternal = function () {
@@ -96,6 +118,10 @@ var AppFramework = function (callback) {
         that.connectionCheckMsg(false);
 
         document.addEventListener('offline', function () {
+            that.connectionCheckMsg(false);
+        }, false);
+
+        document.addEventListener('online', function () {
             that.connectionCheckMsg(false);
         }, false);
 
@@ -142,7 +168,13 @@ var AppFramework = function (callback) {
     };
 
     this.connectionCheckMsg = function (force) {
-        !this.connectionCheck(force) && this.showMessage("connection");
+        if (!force && _conf.skipConnCheck)
+            return;
+
+        if (!this.connectionCheck(force))
+            this.showMessage("connection");
+        else
+            this.clearMessage("connection");
     };
 
 
