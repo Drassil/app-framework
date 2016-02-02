@@ -111,7 +111,7 @@ var AppFramework = function (callback) {
         jQuery('#' + id).fadeOut("slow");
     };
 
-    this.loadExternal = function () {
+    this.loadExternal = function (options) {
         var that = this;
         var url = _conf.urlCrossOrigin ? _conf.urlCrossOrigin : _conf.url;
 
@@ -131,7 +131,7 @@ var AppFramework = function (callback) {
                 timeout: 3000,
                 statusCode: {
                     200: function (response) {
-                        _loadExternal();
+                        _loadExternal(options);
                     },
                     400: function (response) {
                         that.showMessage("connection");
@@ -142,7 +142,7 @@ var AppFramework = function (callback) {
                 }
             });
         } else {
-            _loadExternal();
+            _loadExternal(options);
         }
     };
 
@@ -178,7 +178,7 @@ var AppFramework = function (callback) {
     };
 
 
-    var _loadExternal = function () {
+    var _loadExternal = function (options) {
 
         setInterval(function () {
             that.connectionCheckMsg(false);
@@ -186,7 +186,7 @@ var AppFramework = function (callback) {
 
         switch (_conf.loadType) {
             case "iframe":
-                _loadIFrame();
+                _loadIFrame(options);
                 break;
             case "webview":
                 window.location.replace(_conf.url, '_self');
@@ -194,15 +194,27 @@ var AppFramework = function (callback) {
         }
     };
 
-    var _loadIFrame = function () {
+    var _loadIFrame = function (options) {
+        options=options || {};
         var ifrm = document.createElement("iframe");
         ifrm.setAttribute("name", "app-iframe");
         ifrm.setAttribute("src", _conf.url);
         ifrm.setAttribute("frameBorder", 0);
         ifrm.setAttribute("id", "app-iframe");
-        $(_conf.iframeTarget).html(ifrm);
 
         var childWindow = (ifrm.contentWindow || ifrm.contentDocument);
+
+        $(ifrm).load(function () {
+            options.onLoad && options.onLoad(); // called when iframe is fully loaded
+        });
+
+
+        $(childWindow).ready(function () {
+            options.onReady && options.onReady();
+        });
+
+        $(_conf.iframeTarget).html(ifrm);
+
 
         document.addEventListener('deviceready', function () {
             var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
