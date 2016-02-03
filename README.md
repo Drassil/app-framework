@@ -29,10 +29,10 @@ Thanks to phonegap and web technologies you love.
 
 ## How it works
 
-The app Framework can be configured to work in 4 different ways:
+The app Framework can be configured to work in 4 different ways ( from most ***remote*** solution to ***local*** one) :
 
 
-### content-src ( discouraged )
+### 1. content-src ( everything remote - discouraged )
 
 You can use :
 
@@ -45,17 +45,18 @@ they could be not validated.
 In this case , however, you need to upload all cordova libraries ( cordova.js and all plugins ) 
 inside your remote website to allow it to communicate with device.
 
-### webview
+### 2. webview ( recommended for advanced solutions )
 
 This approach is similar to content-src method, but allow you to create a sort of
 "boot" process where you can show advanced splashscreens in html5, use the app-framework
 built-in connection check and many other things.
 
-You just have to configure conf.json as specified below.
+* You just have to configure conf.json as specified below.
 
-You still have to load cordova libraries remotely to use device API.
+* You still have to load cordova libraries remotely to use device API and 
+re-implement/import built-in app-framework functions in your remote app if you need.
 
-### iframe ( recommended )
+### 3. iframe ( recommended for simple, clean and working solutions )
 
 The recommended way is to use an iframe load type instead. It uses a customizable 
 built-in communication system between the local cordova app and the remote web app
@@ -77,8 +78,10 @@ methods to send cross-origin requests. Anyway you're eventually able to continue
 cordova functions.
 
 
-### local
+### 4. local
 
+Of course you can fully include your web app inside this wrapper without using the ***url*** config.
+In this case, this framework for its built-in functions.
 
 
 
