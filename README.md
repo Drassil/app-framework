@@ -100,6 +100,13 @@ the url of external app
 if your app has a specific address for cross origin requests using ajax, then insert it here
 Otherwise "url" configuration will be used.
 
+##### skipAjaxCheck
+if you want to skip the ajax url check , you can set this conf to true. This check is used to avoid remote loading
+if the specified url is not reachable.
+
+##### skipConnCheck
+enable/disable connection check and periodic message box that appears if no connection available.
+
 ##### customScript
 If you want to load external app using some custom logic, then you can add an url to your script here
 Otherwise the external app will be loaded automatically if "url" has been set.
@@ -116,3 +123,10 @@ The external app can be loaded by this framework in two different ways, and here
 
 In case iframe loading type has been selected, this is the query selector element where
 to load the iframe
+
+
+##### evalPostMessage
+enable/disable evalutation of all strings received by postMessage event. Enabling and combining with ***loadType: iframe*** , you're able to
+execute javascript [phonegap] functions directly on device from your remote web-app loaded in iframe.
+NOTE: Don't use it with untrusted domains!
+
