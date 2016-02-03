@@ -3,6 +3,7 @@
     "url": "",
     "urlCrossOrigin": "",
     "skipAjaxCheck": false,
+    "skipConnCheck" : false,
     "customScript": "",
     "loadType": "webview",
     "iframeTarget": "",
