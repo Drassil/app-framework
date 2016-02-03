@@ -18,13 +18,13 @@ Thanks to phonegap and web technologies you love.
 
 1. download or clone this repo
 
-2. copy config.xml.dist and paste it with new name: config.xml
+2. copy ***config.xml.dist*** and paste it with new name: ***config.xml***
 
-3. copy /www/conf/conf.def.json and paste with new name:  /www/conf/conf.json
+3. copy ***/www/conf/conf.def.json*** and paste with new name:  ***/www/conf/conf.json***
 
-4. configure config.xml following phonegap docs and conf.json following instructions below
+4. ***configure config.xml*** following phonegap docs ***and conf.json*** following instructions below
 
-5. you've a ready-to-build mobile app! 
+5. you've a ***ready-to-build mobile app***!
 
 
 ## How it works
