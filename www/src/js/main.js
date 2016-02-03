@@ -1,4 +1,7 @@
 "use strict";
-// // at this point the device should be yet ready
-// after index.html relocation
-var appFramework = AppFramework.init();
+
+var appFramework = null;
+
+document.addEventListener("deviceready", function () {
+    appFramework = AppFramework.init();
+}, false);

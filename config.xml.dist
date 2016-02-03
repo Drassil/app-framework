@@ -8,6 +8,7 @@
         HyperWeb2
     </author>
     <icon src="logo.jpg" />
+    <content src="src/main.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="portrait" />
     <preference name="target-device" value="universal" />
