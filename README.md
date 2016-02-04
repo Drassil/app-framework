@@ -47,7 +47,7 @@ inside your remote website to allow it to communicate with device.
 
 ### 2. webview ( recommended for advanced solutions )
 
-This approach is similar to content-src method, but allow you to create a sort of
+This approach is similar to content-src method, but allows you to create a sort of
 "boot" process where you can show advanced splashscreens in html5, use the app-framework
 built-in connection check and many other things.
 
@@ -81,7 +81,7 @@ cordova functions.
 ### 4. local
 
 Of course you can fully include your web app inside this wrapper without using the ***url*** config.
-In this case, this framework for its built-in functions.
+In this case, you can continue to use this framework for its built-in functions.
 
 
 
