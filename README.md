@@ -27,6 +27,17 @@ Thanks to phonegap and web technologies you love.
 5. you've a ***ready-to-build mobile app***!
 
 
+***NOTE:*** If you want to compile and run locally, you need to run following script:
+
+`phonegap-install-plugins` ( contains commands to install all required plugins )
+
+and then you need to run:
+
+`phonegap run <platform> --device --verbose`
+
+( to install on your device , overwrite <platform> with android,ios or winphone )
+
+
 ## How it works
 
 The app Framework can be configured to work in 4 different ways ( from most ***remote*** solution to ***local*** one) :
