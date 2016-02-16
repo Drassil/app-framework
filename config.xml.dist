@@ -7,7 +7,7 @@
     <author email="info@hyperweb2.com" href="http://www.hyperweb2.com">
         HyperWeb2
     </author>
-    <icon src="logo.jpg" />
+    <icon src="logo.png" />
     <content src="src/main.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="portrait" />
