@@ -75,14 +75,10 @@ local.properties
 
 # App
 
-/config.xml
-/build/
-/platforms/
-/plugins/
-/www/usr/
-/www/modules/*
-!/www/modules/jquery/
-!/www/modules/respondjs/
-!/www/modules/bootstrap/
-/www/conf/*
-!/www/conf/*.def.*
+/usr/
+/modules/*
+!/modules/jquery/
+!/modules/respondjs/
+!/modules/bootstrap/
+/conf/*
+!/conf/*.def.*
