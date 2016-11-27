@@ -41,7 +41,7 @@ patches-*
 /.externalToolBuilders/*
 # exclude in all levels
 nbproject/
-.sync.ffs_db
+*.ffs_db
 
 #
 # Eclipse
