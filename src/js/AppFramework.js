@@ -12,7 +12,7 @@ var AppFramework = function (callback) {
     // [TODO] avoid callback nesting using hwcore framework
     jQuery.getJSON(AppFramework.URL_CONF + "conf.def.json", function (resDef) {
         _confDef = resDef;
-        jQuery.getJSON(AppFramework.URL_CONF + "conf.json", function (res) {
+        jQuery.getJSON(AppFramework.URL_ROOT + "conf.json", function (res) {
             _conf = jQuery.extend(true, _confDef, res);
 
             var l = navigator.languages instanceof Array && navigator.languages.length > 0 ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
@@ -243,12 +243,13 @@ var AppFramework = function (callback) {
 
 
 // Static properties
-AppFramework.URL_ROOT = "../";
-AppFramework.URL_SRC = AppFramework.URL_ROOT + "src/";
-AppFramework.URL_MODULES = AppFramework.URL_ROOT + "modules/";
+AppFramework.URL_ROOT = "./";
+AppFramework.URL_APP_FWK = AppFramework.URL_ROOT+"app-framework/";
+AppFramework.URL_SRC = AppFramework.URL_APP_FWK + "src/";
+AppFramework.URL_MODULES = AppFramework.URL_APP_FWK + "modules/";
 AppFramework.URL_JS = AppFramework.URL_SRC + "js/";
-AppFramework.URL_CONF = AppFramework.URL_ROOT + "conf/";
-AppFramework.URL_DATA = AppFramework.URL_ROOT + "data/";
+AppFramework.URL_CONF = AppFramework.URL_APP_FWK + "conf/";
+AppFramework.URL_DATA = AppFramework.URL_APP_FWK + "data/";
 // alias for constructor
 AppFramework.init = function (callback) {
     return new AppFramework(callback);
